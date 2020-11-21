@@ -17,8 +17,9 @@ int main(int argc, char *argv[]) {
 
 	do {
 		i++;
-		assert(ret == i)
+		
 		ret = protothread(i);
+		assert(ret == i)
 
 	} while (ret != DONE);
 
