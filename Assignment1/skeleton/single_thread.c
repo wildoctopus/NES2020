@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #define RUNNING 0
-#define DONE    1
+#define DONE    4
 
-int protothread() {
-	printf("protothread!\n");
-	return DONE;
+int protothread(int step) {
+	printf("Executing protothread %d!\n", step);
+	return step;
 }
 
 int main(int argc, char *argv[]) {
@@ -16,10 +17,12 @@ int main(int argc, char *argv[]) {
 
 	do {
 		i++;
-		ret = protothread();
+		assert(ret == i)
+		ret = protothread(i);
 
 	} while (ret != DONE);
 
+	assert(i == 4)
 	printf("thread stopped after %d calls\n", i);
 
 	return 0;
