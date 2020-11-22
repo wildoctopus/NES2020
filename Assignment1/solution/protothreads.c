@@ -23,7 +23,7 @@ PROCESS_THREAD(protothread1, ev, data) {
 	// 	leds_toggle(LEDS_ALL);
 	// }
 	PROCESS_WAIT_EVENT_UNTIL(ev == sensors_event && data == &button_sensor);
-	process_start(&protothread, NULL);
+	process_start(&protothread3, NULL);
 
 	PROCESS_END();
 }
