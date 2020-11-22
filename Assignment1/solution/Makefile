@@ -13,8 +13,8 @@ upload: protothreads.upload
 multiple_threads: multiple_threads.c
 	gcc -g -o multiple_threads multiple_threads.c
 
-single_thread:single_thread.c
-	gcc -g -o single_threads ingle_thread.c
+single_thread: single_thread.c
+	gcc -g -o single_thread single_thread.c
 	
 simulation:
 	java -jar $(CONTIKI)/tools/cooja/dist/cooja.jar -contiki=$(CONTIKI)
