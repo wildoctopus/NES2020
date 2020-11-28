@@ -7,7 +7,7 @@
 PROCESS(protothread1, "Protothread Process 1");
 PROCESS(protothread2, "Protothread Process 2");
 PROCESS(protothread3, "Protothread Process 3");
-AUTOSTART_PROCESSES(&protothread1,&protothread2);
+AUTOSTART_PROCESSES(&protothread1);
 
 PROCESS_THREAD(protothread1, ev, data) {
 	PROCESS_BEGIN();
@@ -31,8 +31,8 @@ PROCESS_THREAD(protothread2, ev, data) {
 
 	printf("Protothread 2!\n");
         while(1) {
-    	 printf("Protothread 2 is running");
-    	 PROCESS_PAUSE();
+    	  printf("Protothread 2 is running");
+    	  PROCESS_PAUSE();
     }	
 	PROCESS_END();
 }
@@ -42,8 +42,8 @@ PROCESS_THREAD(protothread3, ev, data) {
 
 	printf("Protothread 3!\n");
         while(1) {
-    	 printf("Protothread 3 is running");
-    	 PROCESS_PAUSE();
+    	  printf("Protothread 3 is running");
+    	  PROCESS_PAUSE();
     }	
 	PROCESS_END();
 }
