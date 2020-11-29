@@ -28,7 +28,7 @@ int protothread()
     default:
         assert(step == 4);
         printf("Executed Step 4\n");
-        step = 1;
+        step = DONE;
         break;
 
     }
