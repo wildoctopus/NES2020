@@ -13,17 +13,17 @@ int protothread()
     case 1:
         assert(step == 1);
         printf("Executed Step 1\n");
-        step = 2;
+        step++;
         return RUNNING;
     case 2:
         assert(step == 2);
         printf("Executed Step 2\n");
-        step = 3;
+        step++;
         return RUNNING;
     case 3:
         assert(step == 3);
         printf("Executed Step 3\n");
-        step = 4;
+        step++;
         return RUNNING;
     default:
         assert(step == 4);
