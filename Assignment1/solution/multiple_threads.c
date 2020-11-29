@@ -44,7 +44,7 @@ thread_t* threads_pop_front() {
 
 int protothread1() {
     static int step = 1;
-    char thread_id[] = "protohread1";
+    char thread_id[] = "protothread1";
     switch(step)
     {
     case 1:
