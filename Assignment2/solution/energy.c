@@ -11,8 +11,8 @@ PROCESS(energy_pt, "Energy estimation");
 AUTOSTART_PROCESSES(&led_pt, &btn_pt, &energy_pt);
 
 /* LED on/off durations */
-static float time_on;
-static float time_off;
+// static float time_on;
+// static float time_off;
 
 PROCESS_THREAD(btn_pt, ev, data) {
     PROCESS_BEGIN();
@@ -44,7 +44,7 @@ PROCESS_THREAD(led_pt, ev, data) {
 PROCESS_THREAD(energy_pt, ev, data) {
     PROCESS_BEGIN();
     
-    static struct etimer et;
+    // static struct etimer et;
     
     /* Real-time clock */
     printf("RTIMER_SECOND: %u\n", RTIMER_SECOND);
