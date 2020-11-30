@@ -11,8 +11,8 @@ PROCESS(energy_pt, "Energy estimation");
 AUTOSTART_PROCESSES(&led_pt, &btn_pt, &energy_pt);
 
 /* LED on/off durations */
-// static float time_on;
-// static float time_off;
+static float time_on = 2.0;
+static float time_off = 1.0;
 
 PROCESS_THREAD(btn_pt, ev, data) {
     PROCESS_BEGIN();
@@ -26,16 +26,20 @@ PROCESS_THREAD(btn_pt, ev, data) {
 
 PROCESS_THREAD(led_pt, ev, data) {
     static struct etimer timer;
-        
+    static int i = 0;
     PROCESS_BEGIN();
     etimer_set(&timer, CLOCK_SECOND);
  
    while(1) {
      PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
-     /* Reset the etimer to trig again in 1 second */
      leds_toggle(LEDS_RED);
-     etimer_reset(&timer);
-     /* ... */
+     if( i== 0 ){
+         i = 1;
+         etimer_set(&timer, CLOCK_SECOND);
+     }else if(i == 1){
+        i = 0;
+        etimer_set(&timer, CLOCK_SECOND / 2);
+     }
    }
 
     PROCESS_END();
