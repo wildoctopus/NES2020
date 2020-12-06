@@ -28,6 +28,7 @@ PROCESS_THREAD(btn_pt, ev, data) {
         // Check change_time method to undeerstand the time_on and time_off values
         switch (duty_cycle) {
             case 10:
+            	// TODO: Remove the Hardcoding by implementing the change_time method
                 duty_cycle = 50;
                 time_on = 0.01;
                 time_off = 0.01;
