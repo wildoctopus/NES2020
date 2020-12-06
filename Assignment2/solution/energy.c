@@ -3,6 +3,9 @@
 #include "dev/button-sensor.h"
 #include "dev/leds.h"
 #include "sys/etimer.h"
+#include "sys/energest.h"
+
+#define ENERGEST_CONF_ON 1
 
 PROCESS(led_pt, "Blink the LED");
 PROCESS(btn_pt, "Handle button pressed");
@@ -67,15 +70,30 @@ PROCESS_THREAD(led_pt, ev, data) {
     PROCESS_END();
 }
 
+static unsigned long to_seconds(uint64_t time) {
+  return (unsigned long)(time / RTIMER_SECOND);
+}
+
 PROCESS_THREAD(energy_pt, ev, data) {
     PROCESS_BEGIN();
     
-    // static struct etimer et;
-    
+    static struct etimer et;
+    etimer_set(&et, CLOCK_SECOND);
+
+    energest_init();
+
+    while(1) {
+    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
+    energest_flush();
     /* Real-time clock */
+    printf("\nEnergest:\n");
+    printf(" CPU %4lus\n", to_seconds(energest_type_time(ENERGEST_TYPE_CPU)));
+    printf(" LED %4lus\n", to_seconds(energest_type_time(ENERGEST_TYPE_LED_RED)));
+    etimer_reset(&et);
     printf("RTIMER_SECOND: %u\n", RTIMER_SECOND);
-    
+
     // TODO: Implement here
-    
+    }
+
     PROCESS_END();
 }
