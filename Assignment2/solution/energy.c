@@ -117,9 +117,6 @@ PROCESS_THREAD(energy_pt, ev, data) {
     /* Real-time clock */
     printf("RTIMER_SECOND: %u\n", RTIMER_SECOND);
 
-
-
-
     while(1) {
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 
@@ -147,9 +144,7 @@ PROCESS_THREAD(energy_pt, ev, data) {
 
     printf("Energy Consumed - CPU: %lu mJ LED: %lu mJ \n", energy_consumption_cpu, energy_consumption_led);
     
-
     etimer_reset(&et);
-    // TODO: Implement here
     }
 
     PROCESS_END();
