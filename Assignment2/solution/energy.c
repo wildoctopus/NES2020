@@ -14,6 +14,7 @@ PROCESS(energy_pt, "Energy estimation");
 AUTOSTART_PROCESSES(&led_pt, &btn_pt, &energy_pt);
 
 /* LED on/off durations */
+// Intial values for 10% duty cycle
 static float time_on = 0.002;
 static float time_off = 0.198;
 static int duty_cycle = 10;
@@ -46,7 +47,8 @@ PROCESS_THREAD(btn_pt, ev, data) {
                 printf("switching to %d percent\n", duty_cycle);
                 break;
         }
-        // change_time(duty_cycle);
+                // change_time(duty_cycle);
+        
         
     }
     
@@ -91,28 +93,61 @@ PROCESS_THREAD(led_pt, ev, data) {
     PROCESS_END();
 }
 
-static unsigned long to_seconds(uint64_t time) {
-  return (unsigned long)(time / RTIMER_SECOND);
-}
+// static unsigned long to_seconds(uint64_t time) {
+//   return (unsigned long)(time / RTIMER_SECOND);
+// }
 
 PROCESS_THREAD(energy_pt, ev, data) {
     PROCESS_BEGIN();
-    
+  
+    static unsigned long old_cpu_active_time;
+    static unsigned long old_led_active_time;
+
     static struct etimer et;
-    etimer_set(&et, CLOCK_SECOND);
 
     energest_init();
 
-    while(1) {
-    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
-    energest_flush();
+    // Initial active time of each component in ticks
+    old_cpu_active_time = energest_type_time(ENERGEST_TYPE_CPU);
+    old_led_active_time = energest_type_time(ENERGEST_TYPE_LED_RED);
+
+    // Calculate enrgy consumption for every second
+    etimer_set(&et, CLOCK_SECOND);
     /* Real-time clock */
-    printf("\nEnergest:\n");
-    printf(" CPU %4lus\n", to_seconds(energest_type_time(ENERGEST_TYPE_CPU)));
-    printf(" LED %4lus\n", to_seconds(energest_type_time(ENERGEST_TYPE_LED_RED)));
-    etimer_reset(&et);
     printf("RTIMER_SECOND: %u\n", RTIMER_SECOND);
 
+
+
+
+    while(1) {
+    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
+
+    energest_flush();
+
+    //Total active time of each component untill current second in ticks
+    unsigned long new_cpu_active_time = energest_type_time(ENERGEST_TYPE_CPU);
+    unsigned long new_led_active_time = energest_type_time(ENERGEST_TYPE_LED_RED);
+
+    //Active time of each component in last second in ms
+    unsigned long cpu_active_time = (new_cpu_active_time - old_cpu_active_time) * 1000 / RTIMER_SECOND;
+    unsigned long led_active_time = (old_led_active_time - new_led_active_time) * 1000 / RTIMER_SECOND;
+
+    // Swap the values to calculate active time and energy consumption for next second 
+    old_cpu_active_time = new_cpu_active_time;
+    old_led_active_time = new_cpu_active_time;
+
+    printf("Active Time - CPU: %lu ms LED: %lu ms \n", cpu_active_time, led_active_time);
+
+    // Energy consumption E = voltage * current * time 
+    // https://stackoverflow.com/questions/45644277/how-to-calculate-total-energy-consumption-using-cooja
+    // Voltage and current values are from datasheet of the microcontroller
+    unsigned long energy_consumption_cpu = 3 * 0.05 * cpu_active_time;
+    unsigned long energy_consumption_led = 1.8 * 20 * led_active_time / 1000;
+
+    printf("Energy Consumed - CPU: %lu mJ LED: %lu mJ \n", energy_consumption_cpu, energy_consumption_led);
+    
+
+    etimer_reset(&et);
     // TODO: Implement here
     }
 
