@@ -30,22 +30,30 @@ PROCESS_THREAD(btn_pt, ev, data) {
         switch (duty_cycle) {
             case 10:
             	// TODO: Remove the Hardcoding by implementing the change_time method
+                time_on = change_time(duty_cycle);
+                time_off = period - time_on;
+                
                 duty_cycle = 50;
-                time_on = 0.01;
-                time_off = 0.01;
                 printf("switching to %d percent\n", duty_cycle);
+                
                 break;
             case 50:
+                
+                time_on = change_time(duty_cycle);
+                time_off = period - time_on;
+                
                 duty_cycle = 90;
-                time_on = 0.018;
-                time_off = 0.002;
                 printf("switching to %d percent\n", duty_cycle);
+                
                 break;
             case 90:
+                
+                time_on = change_time(duty_cycle);
+                time_off = period - time_on;
+                
                 duty_cycle = 10;
-                time_on = 0.002;
-                time_off = 0.198;
                 printf("switching to %d percent\n", duty_cycle);
+                
                 break;
         }
                 // change_time(duty_cycle);
@@ -57,7 +65,7 @@ PROCESS_THREAD(btn_pt, ev, data) {
 }
 
 // TODO: Implement this method properly, could not print float values here to check the correctness
-void change_time(int brightness_level) {
+float change_time(int brightness_level) {
     // Below formulas are  applied to calculate the time_on and time_off intervals
     // 1) Frequnecy is 50 hz
     // 2) Period ( T ) =  1 / f ;
@@ -68,8 +76,8 @@ void change_time(int brightness_level) {
     float period = 1 / frequency ;
     // printf("period %lf \n", period );
 
-    time_on = (brightness_level / 100 ) * period;
-    time_off = period - time_on;
+    float on_time = (brightness_level / 100 ) * period;
+    return on_time;
 }
 
 PROCESS_THREAD(led_pt, ev, data) {
