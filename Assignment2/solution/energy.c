@@ -38,7 +38,7 @@ void change_time() {
     // 1) Frequnecy is 50 hz
     // 2) Period ( T ) =  1 / f ;
     // 3) Period ( T ) = time_on + time_off;
-    // 4) Duty_cycle = ( time_on / T ) * 100 ; => time_on = (Duty_cycle / 100 ) * T ;
+    // 4) Duty_cycle = ( time_on / T ) * 100 ; => time_on = (T * period)/100 ;
 
     float frequency = 50;
     float period = 1 / frequency ;
